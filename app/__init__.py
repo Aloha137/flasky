@@ -6,6 +6,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_pagedown import PageDown
 from config import config
+import os
 
 bootstrap = Bootstrap()
 mail = Mail()
@@ -28,6 +29,14 @@ def create_app(config_name):
     db.init_app(app)
     login_manager.init_app(app)
     pagedown.init_app(app)
+
+    if os.path.exists('.env'):
+        print('Importing environment from .env...')
+        for line in open('.env'):
+            var = line.strip().split('=')
+            if len(var) == 2:
+                os.environ[var[0]] = var[1]
+
 
     if app.config['SSL_REDIRECT']:
         from flask_sslify import SSLify
